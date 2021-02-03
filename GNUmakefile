@@ -34,7 +34,7 @@
 
 CC := gcc
 LINKER := gcc
-CFLAGS := -g -ggdb -O
+CFLAGS := -g -ggdb -O 
 LDFLAGS :=
 CFILES := $(wildcard *.c)
 OBJS := $(patsubst %.c, %.o, $(CFILES))
@@ -69,7 +69,7 @@ $(OBJS): %.o: %.c
 	@echo -en "\n"
 
 $(PROGRAM): $(OBJS)
-	$(LINKER) $(LDFLAGS) $(OBJS) -lm -o $(PROGRAM)
+	$(LINKER) $(LDFLAGS) $(OBJS) -lm -lgmp -o $(PROGRAM)
 
 #---------------------------------------------------------------
 

@@ -4,6 +4,100 @@
 #include <stdlib.h>
 #include <math.h>
 
+int unpacking(int n, char *msg){
+  //char msg[4];
+  int MASK;
+  int a;
+  char c;
+
+  MASK = 0xFF000000;
+  a = (n & MASK) >> 24;
+  MASK = 0x000000FF;
+  a = a & MASK;
+  c = (char)a;
+  msg[0] = c;
+
+  MASK = 0x00FF0000;
+  a = (n & MASK) >> 16;
+  MASK = 0x000000FF;
+  a = a & MASK;
+  c = (char)a;
+  msg[1] = c;
+
+ MASK = 0x0000FF00;
+  a = (n & MASK) >> 8;
+  MASK = 0x000000FF;
+  a = a & MASK;
+  c = (char)a;
+  msg[2] = c;
+
+  MASK = 0x000000FF;
+  a = (n & MASK);
+  //MASK = 0x000000FF;
+  //a = a & MASK;
+  c = (char)a;
+  msg[3] = c;
+
+
+
+  
+  return 1;
+  
+}
+
+
+
+int packing(char a, char b, char c, char d){
+  int zip;
+  int MASK;
+  int A;
+
+  zip = 0x00000000;
+  //zip = AAAAAAAA BBBBBBBB CCCCCCCC DDDDDDDDD
+  //         zip -> 00000000 00000000 00000000 00000000
+  //a = AAAAAAAA -> 00000000 00000000 00000000 AAAAAAAA
+  //             -> AAAAAAAA 00000000 00000000 00000000
+  //b = BBBBBBBB -> 00000000 00000000 00000000 BBBBBBBB
+  //             -> 00000000 BBBBBBBB 00000000 00000000
+
+
+  //       XXXX XX10&
+  //MASK   0000 0011
+  //-----------------
+  //       0000 0010
+  
+  MASK = 0x000000FF;
+  A = (int)a & MASK ;
+  A = A << 24;
+  MASK = 0xFF000000;
+  A = A & MASK;
+  zip = zip | A;
+
+  MASK = 0x000000FF;
+  A = (int)b & MASK ;
+  A = A << 16;
+  MASK = 0x00FF0000;
+  A = A & MASK; 
+  zip = zip | A;
+
+  MASK = 0x000000FF;
+  A = (int)c & MASK ;
+  A = A << 8;
+  MASK = 0x0000FF00;
+  A = A & MASK; 
+  zip = zip | A;
+
+  MASK = 0x000000FF;
+  A = (int)d & MASK ;
+  //A = A << 16;
+  //MASK = 0x00FF0000;
+  //A = A & MASK; 
+  zip = zip | A;
+
+  return zip;
+}
+
+
 int print_bit(char c){
   //255   -> 1111 1111
   int i;
@@ -102,10 +196,31 @@ int print_bit(char c){
     mask = pow(2,i+1);
     //printf("%i\n",mask);
   }
-  printf("\n");
-  
-
-  
+  printf("\n");  
   
   return 1;
+}
+
+
+double packInt2Double(int a, int b){
+  long long D;
+  long long MASK = 0x00001;
+  long long E;
+  double r;
+  
+  //MASK = 0xFFFFFFFF00000000;
+  E = (a << 32);// & MASK;
+
+  D = (E | D);// & MASK;
+  
+  MASK = 0x00000000FFFFFFFF;
+  D = b | D;
+
+  r = (double)D;
+  
+  printf("%f\n",r);
+
+  
+  return r;
+  
 }
